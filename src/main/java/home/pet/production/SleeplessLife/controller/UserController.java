@@ -31,23 +31,28 @@ public class UserController {
         return "redirect:/user/list";
     }
 
-    @GetMapping("{customerLink}")
-    public String showUser(@PathVariable String customerLink, Model model) {
+    @GetMapping("/edit/{customerLink}")
+    public String editUser(@PathVariable String customerLink, Model model) {
         model.addAttribute("user", userService.findOne(customerLink));
         model.addAttribute("roles", Role.values());
         return "userEdit";
     }
 
-    @PostMapping("{customerLink}")
-    public String changeUser(@PathVariable String customerLink,
+    @PostMapping("/edit/{customerLink}")
+    public String doEditUser(@PathVariable String customerLink,
                              @RequestParam Map<String, String> form,
                              @RequestParam String newLink,
-                             @RequestParam String username,
+                             @RequestParam String name,
                              @RequestParam String email,
                              @RequestParam String password) {
 
-        userService.updateUser(customerLink, newLink, username, email, password, form);
+        userService.updateUser(customerLink, newLink, name, email, password, form);
 
         return "redirect:/user/list";
+    }
+
+    @GetMapping("/{customerLink}")
+    public String userPage(@PathVariable String customerLink) {
+        return "userPage";
     }
 }

@@ -20,7 +20,7 @@ public class User implements UserDetails {
     @Column(updatable = false, nullable = false)
     private UUID id;
     private String customerLink;
-    private String username;
+    private String name;
     private String email;
     private String password;
 
@@ -32,11 +32,15 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String customerLink, String username, String password, String email) {
+    public User(String customerLink, String name, String password, String email) {
         this.customerLink = customerLink;
-        this.username = username;
+        this.name = name;
         this.password = password;
         this.email = email;
+    }
+
+    public boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
     }
 
     public UUID getId() {
@@ -59,24 +63,26 @@ public class User implements UserDetails {
         this.customerLink = customerLink;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
+    @Override
+    public String getUsername() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -99,25 +105,21 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
 
+    public String getEmail() {
+        return email;
+    }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", customerLink='" + customerLink + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

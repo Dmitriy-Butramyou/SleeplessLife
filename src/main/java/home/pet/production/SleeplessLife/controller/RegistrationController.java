@@ -20,16 +20,16 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addNewUser(@RequestParam String username,
+    public String addNewUser(@RequestParam String name,
                              @RequestParam String password,
                              @RequestParam String email, Model model) {
-        boolean result = userService.createUser(username, password, email);
+        boolean result = userService.createUser(name, password, email);
+        //TODO bullshit заменить валидацией
         if(!result) {
-            String message = "Пользователь с данным email уже существует";
+            String message = "Пользователь не создан, ошибка данных";
             model.addAttribute("message", message);
             return "registration";
         }
-
-        return "redirect:/user/list";
+        return "redirect:/login";
     }
 }

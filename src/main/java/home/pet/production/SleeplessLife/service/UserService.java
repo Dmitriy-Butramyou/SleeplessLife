@@ -4,8 +4,6 @@ import home.pet.production.SleeplessLife.domain.Role;
 import home.pet.production.SleeplessLife.model.User;
 import home.pet.production.SleeplessLife.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,13 +24,16 @@ public class UserService implements UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    /**
+     * Создание root пользователя при первом старте
+     */
     @PostConstruct
     public void init() {
         String email = "admin";
         User user = userRepo.findByEmail(email);
         if(user == null) {
             user = new User();
-            user.setUsername("admin");
+            user.setName("admin");
             user.setPassword(passwordEncoder.encode("admin"));
             user.setCustomerLink("admin");
             user.setEmail(email);
@@ -53,32 +54,43 @@ public class UserService implements UserDetailsService {
         userRepo.deleteById((userRepo.findByCustomerLink(customerLink)).getId());
     }
 
-    public Boolean createUser(String username, String password, String email) {
-        boolean result = false;
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
+    /**
+     * Создание нового пользователя при валидных данных
+     * @param email по нему идет проверка в базе, пользователей с таким же
+     *              email не должно сеществовать
+     * @return true если пользователь добавлен, false если нет
+     */
+    //todo добавить ограничения по длине и качестве пароля, проверять имя
+    public Boolean createUser(String name, String password, String email) {
+        if(name != null && !name.isEmpty()
+                && password != null && !password.isEmpty()
+                && !email.isEmpty() && userRepo.findByEmail(email) == null) {
+
             String customUuid = UUID.randomUUID().toString();
-            User newUser = new User(customUuid, username, passwordEncoder.encode(password), email);
+            User newUser = new User(customUuid, name, passwordEncoder.encode(password), email);
             newUser.setRoles(Collections.singleton(Role.USER));
             userRepo.save(newUser);
-            result = true;
+            return true;
         }
-        return result;
+        return false;
     }
 
-    public void updateUser(String customerLink, String newLink, String username, String email, String password, Map<String, String> form) {
+    /**
+     * Обновление сущ. записи пользователя.
+     * @param customerLink уникальная ссылка пользователя пользователя/ доступна к изменения, изначально UUID
+     * @param form роли
+     */
+    public void updateUser(String customerLink, String newLink, String name, String email, String password, Map<String, String> form) {
         User updateUser = userRepo.findByCustomerLink(customerLink);
-
         //Если новая ссылка пользователя уникальна, то изменяем стандартную
-        if(newLink !=null && userRepo.findByCustomerLink(newLink) == null) {
+        if(newLink !=null && !newLink.isEmpty() && userRepo.findByCustomerLink(newLink) == null) {
             updateUser.setCustomerLink(newLink);
         }
-
         //TODO добавить валидацию
-        updateUser.setUsername(username != null ? username : updateUser.getUsername());
-        updateUser.setEmail(email != null ? email : updateUser.getEmail());
+        updateUser.setName((name != null && !name.isEmpty()) ? name : updateUser.getUsername());
+        updateUser.setEmail((email != null && !email.isEmpty())? email : updateUser.getEmail());
         //TODO отправлять на почту письмо подтверждения
-        updateUser.setPassword(password != null ? passwordEncoder.encode(password) : updateUser.getPassword());
+        updateUser.setPassword((password != null && !password.isEmpty()) ? passwordEncoder.encode(password) : updateUser.getPassword());
 
         //TODO Изменение ролей, по хорошему нужно вынести в другое место
         Set<String> roles = Arrays.stream(Role.values())
@@ -94,23 +106,18 @@ public class UserService implements UserDetailsService {
         userRepo.save(updateUser);
     }
 
-    //Производит поиск по email
+    /**
+     * Метод для Security, производит поис пользователей и их ролей
+     * @param email пользователя (поле уникально для всех)
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
         if(user == null) {
             throw new UsernameNotFoundException("Invalid User");
         } else {
-            Set<GrantedAuthority> grantedAuthorities = user.getRoles()
-                    .stream()
-                    .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
-                    .collect(Collectors.toSet());
-         return new org
-                 .springframework
-                 .security
-                 .core
-                 .userdetails
-                 .User(user.getEmail(), user.getPassword(), grantedAuthorities);
+         return user;
         }
     }
 }

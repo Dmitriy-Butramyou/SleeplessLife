@@ -1,6 +1,8 @@
-<#import "parts/common.ftl" as c>
+<#import "parts/common.ftlh" as c>
+<#import "parts/navigation.ftlh" as n>
 
 <@c.page>
+<@n.navigation>
 List of users
 <table>
     <thead>
@@ -14,7 +16,7 @@ List of users
     <tbody>
     <#list users as user>
         <tr>
-            <td><a href="/user/${user.customerLink}">${user.username}</a></td>
+            <td><a href="/user/edit/${user.customerLink}">${user.name}</a></td>
             <td>${user.email}</td>
             <td><#list user.roles as role>${role}<#sep>, </#list></td>
             <td><a href="/user/delete/${user.customerLink}">Удалить</a> </td>
@@ -22,4 +24,5 @@ List of users
     </#list>
     </tbody>
 </table>
+</@n.navigation>
 </@c.page>

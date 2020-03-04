@@ -1,7 +1,7 @@
-<#import "parts/common.ftl" as c>
+<#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <form action="/user/${user.customerLink}" method="post">
+    <form action="/edit/${user.customerLink}" method="post">
     <table>
         <thead>
         <tr>
@@ -12,7 +12,7 @@
             <th>UUID</th><td><input type="text" name="newLink" value="${user.customerLink}"></td>
         </tr>
         <tr>
-            <th>Name</th><td><input type="text" name="username" value="${user.username}"></td>
+            <th>Name</th><td><input type="text" name="name" value="${user.name}"></td>
         </tr>
         <tr>
             <th>Email</th><td><input type="text" name="email" value="${user.email}"></td>
