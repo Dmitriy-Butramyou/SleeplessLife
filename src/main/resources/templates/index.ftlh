@@ -1,10 +1,10 @@
 <#import "parts/common.ftlh" as c>
-    <#import "parts/navigation.ftlh" as n>
+<#import "parts/navigation.ftlh" as n>
 
 <@c.page>
-<@n.navigation>
+    <@n.navigation>
 
-    <h2 class="text-center">Контент...</h2>
+			<h2 class="text-center">Контент...</h2>
 
-</@n.navigation>
+    </@n.navigation>
 </@c.page>

@@ -11,25 +11,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class RegistrationController {
 
-    @Autowired
-    UserService userService;
+  @Autowired
+  UserService userService;
 
-    @GetMapping("/registration")
-    public String addUser() {
-        return "registration";
-    }
+  @GetMapping("/registration")
+  public String addUser() {
+    return "registration";
+  }
 
-    @PostMapping("/registration")
-    public String addNewUser(@RequestParam String name,
-                             @RequestParam String password,
-                             @RequestParam String email, Model model) {
-        boolean result = userService.createUser(name, password, email);
-        //TODO bullshit заменить валидацией
-        if(!result) {
-            String message = "Пользователь не создан, ошибка данных";
-            model.addAttribute("message", message);
-            return "registration";
-        }
-        return "redirect:/login";
+  @PostMapping("/registration")
+  public String addNewUser(@RequestParam String name,
+                           @RequestParam String password,
+                           @RequestParam String email, Model model) {
+    boolean result = userService.createUser(name, password, email);
+    //TODO bullshit заменить валидацией
+    if (!result) {
+      String message = "Пользователь не создан, ошибка данных";
+      model.addAttribute("message", message);
+      return "registration";
     }
+    return "redirect:/login";
+  }
 }

@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
 
 
-    @GetMapping
-    public String start() {
-        return "index";
-    }
+  @GetMapping
+  public String start() {
+    return "index";
+  }
 
 
 }
