@@ -1,5 +1,6 @@
 package home.pet.production.SleeplessLife.model;
 
+import home.pet.production.SleeplessLife.converter.StringListConverter;
 import home.pet.production.SleeplessLife.domain.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +10,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Модель описывающая класс пользователя
+ *
+ * @author D.Butramyou
+ */
 @Entity
 @Table(name = "usr")
 @Getter
@@ -27,6 +34,9 @@ public class User implements UserDetails {
   private String name;
   private String email;
   private String password;
+  @Column
+  @Convert(converter = StringListConverter.class)
+  private List<String> personalPhotos;
 
   @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

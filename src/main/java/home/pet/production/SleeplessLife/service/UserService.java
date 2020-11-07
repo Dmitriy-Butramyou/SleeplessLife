@@ -16,6 +16,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Сервис для работы с пользователем
+ *
+ * @author D.Butramyou
+ */
 @Service
 public class UserService implements UserDetailsService {
 
@@ -93,13 +98,12 @@ public class UserService implements UserDetailsService {
     //TODO добавить валидацию
     updateUser.setName(validateFields(updateUser.getUsername(), form.get("name"))
         ? form.get("name") : updateUser.getUsername());
-    updateUser.setEmail(validateFields(updateUser.getEmail(), form.get("email"))
+    updateUser.setEmail(validateFields(updateUser.getEmail(), form.get("email")) && userRepo.findByEmail(form.get("email")) == null
         ? form.get("email") : updateUser.getEmail());
     //TODO отправлять на почту письмо подтверждения
     updateUser.setPassword((form.get("password") != null && !form.get("password").isEmpty())
         ? passwordEncoder.encode(form.get("password")) : updateUser.getPassword());
 
-    //TODO Изменение ролей, по хорошему нужно вынести в другое место
     if (currentUser.getRoles().contains(Role.ADMIN)) {
       Set<String> roles = Arrays.stream(Role.values())
           .map(Role::getAuthority)

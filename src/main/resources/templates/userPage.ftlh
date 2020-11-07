@@ -1,5 +1,6 @@
 <#import "parts/common.ftlh" as c>
 <#import "parts/navigation.ftlh" as n>
+<#import "parts/security.ftlh" as s>
 
 <@c.page>
     <@n.navigation>
@@ -8,7 +9,8 @@
 
 			<div class="display-flex">
 				<div class="display-grid">
-					<img src="/img/default.jpg" alt="Фото" class="personalPhoto">
+					<img src="/img<#if pathToPersonalPhoto??>${pathToPersonalPhoto}<#else>/default.jpg</#if>"
+							 onerror="this.onerror=null; this.src='/img/default.jpg'" alt="Фото" class="personalPhoto">
 					<button type="button" id="uploadPersonalPhoto">Replace photo</button>
 				</div>
 				<div>
@@ -30,8 +32,8 @@
 
 			<div class="popup">
 				<div class="popup_content">
-					<form enctype="multipart/form-data" action="/user/uploadPersonalPhoto/{customerLink}" method="post">
-						<input type="file" accept="image/*">
+					<form enctype="multipart/form-data" action="/user/uploadPersonalPhoto/${s.userLink}" method="post">
+						<input type="file" name="photo" accept="image/*">
 						<div class="close_popup_content">+</div>
 						<div class="button_to_down">
 							<input type="hidden" name="_csrf" value="${_csrf.token}"/>
