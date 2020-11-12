@@ -6,7 +6,7 @@
 		<meta charset="UTF-8">
 		<title>SleeplessLife</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<link rel="stylesheet" href="/static/main.css">
+		<link rel="stylesheet" href="/style/main.css">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 					integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -14,12 +14,28 @@
 
 	</head>
 	<body>
-  <#include "navbar.ftlh">
-	<div class="container">
-      <#nested>
+	<div id="pop-ups">
+		<div class="center">
+			<div class="form-input">
+				<div class="close_popup_content">
+					<div class="closeCross">+</div>
+				</div>
+				<label for="file-ip-1">Upload Image</label>
+				<input type="file" id="file-ip-1" accept="image/*"
+							 onchange="showPreview(event);">
+				<div class="preview">
+					<img id="file-ip-1-preview">
+				</div>
+			</div>
+		</div>
 	</div>
+  <#include "navbar.ftlh">
+		<div class="container">
+  	    <#nested>
+		</div>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="/javaScript/main.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 					integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 					crossorigin="anonymous"></script>

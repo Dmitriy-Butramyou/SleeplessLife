@@ -45,11 +45,15 @@
 
 			<script>
           document.getElementById("uploadPersonalPhoto").addEventListener("click", function () {
-              document.querySelector(".popup").style.display = "flex";
+              document.querySelector("#pop-ups").style.display = "block";
           });
 
-          document.querySelector('.close_popup_content').addEventListener('click', function () {
-              document.querySelector(".popup").style.display = "none";
+          document.querySelector('.closeCross').addEventListener('click', function () {
+              document.querySelector("#pop-ups").style.display = "none";
+          });
+          document.querySelector('.center').addEventListener('click', function (e) {
+              if (e.target !== this) return;
+              document.querySelector("#pop-ups").style.display = "none";
           })
 			</script>
 
