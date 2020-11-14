@@ -14,17 +14,14 @@
 
 	</head>
 	<body>
-	<div id="pop-ups">
+	<div id="pop-up" class="hide">
 		<div class="center">
-			<div class="form-input">
-				<div class="close_popup_content">
-					<div class="closeCross">+</div>
+			<div class="form-pop-up">
+				<div class="close-popup-content">
+					<div id="close-pop-up-cross">+</div>
 				</div>
-				<label for="file-ip-1">Upload Image</label>
-				<input type="file" id="file-ip-1" accept="image/*"
-							 onchange="showPreview(event);">
-				<div class="preview">
-					<img id="file-ip-1-preview">
+				<div class="content">
+					<#--содержимое всплывающего окна-->
 				</div>
 			</div>
 		</div>
@@ -35,6 +32,8 @@
 		</div>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<input id="userId" type="hidden" value="${userLink}"/>
+	<input id="csrf" type="hidden" value="${_csrf.token}"/>
 	<script src="/javaScript/main.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 					integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
