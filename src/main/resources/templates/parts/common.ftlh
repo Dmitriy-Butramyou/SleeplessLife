@@ -32,8 +32,10 @@
 		</div>
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<input id="userId" type="hidden" value="${userLink}"/>
-	<input id="csrf" type="hidden" value="${_csrf.token}"/>
+	<script>
+		const userId = '${userLink}';
+		const csrf= '${_csrf.token}';
+	</script>
 	<script src="/javaScript/main.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 					integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

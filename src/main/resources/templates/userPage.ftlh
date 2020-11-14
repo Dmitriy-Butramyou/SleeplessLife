@@ -29,5 +29,6 @@
 				</div>
 			</div>
 
+			<script src="/javaScript/userPage.js"></script>
     </@n.navigation>
 </@c.page>
