@@ -1,6 +1,8 @@
 package home.pet.production.SleeplessLife.service;
 
+import home.pet.production.SleeplessLife.model.Image;
 import home.pet.production.SleeplessLife.model.User;
+import home.pet.production.SleeplessLife.repos.ImageRepo;
 import home.pet.production.SleeplessLife.repos.UserRepo;
 import home.pet.production.SleeplessLife.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Сервис для работы с изображениями
@@ -23,23 +24,24 @@ public class ImagesService {
 
   @Autowired
   UserRepo userRepo;
+  @Autowired
+  ImageRepo imageRepo;
 
   @Value("${upload.path}")
   private String uploadPath;
 
   /**
    * Загрузка аватарки пользователя
-   * @param image изображение
-   * @param linkToUser уникальная ссылка пользователя
+   * @param uploadedImage изображение
+   * @param user пользователь загрузивший изображение
    */
-  public void uploadPersonalPhoto(MultipartFile image, String linkToUser) throws IOException {
-    if (image != null && !image.getOriginalFilename().isEmpty()) {
-      String pathToImage = saveImage(image);
-      User user = userRepo.findByCustomerLink(linkToUser);
-      List<String> personalPhotos = user.getPersonalPhotos();
-      personalPhotos.add(pathToImage);
-      user.setPersonalPhotos(personalPhotos);
+  public void uploadPersonalPhoto(MultipartFile uploadedImage, User user) throws IOException {
+    if (uploadedImage != null && !uploadedImage.getOriginalFilename().isEmpty()) {
+      String pathToImage = saveImage(uploadedImage);
+      Image image = new Image(pathToImage, null, true, user);
 
+      image = imageRepo.save(image);
+      user.setImages(image);
       userRepo.save(user);
     }
   }

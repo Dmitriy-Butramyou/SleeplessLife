@@ -2,6 +2,7 @@ package home.pet.production.SleeplessLife.controller;
 
 
 import home.pet.production.SleeplessLife.domain.Role;
+import home.pet.production.SleeplessLife.model.Image;
 import home.pet.production.SleeplessLife.model.User;
 import home.pet.production.SleeplessLife.service.ImagesService;
 import home.pet.production.SleeplessLife.service.UserService;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Контролер для работы с пользователем
@@ -90,8 +93,9 @@ public class UserController {
   @GetMapping("/{customerLink}")
   public String userPage(@PathVariable String customerLink, Model model) {
     User user = userService.findOne(customerLink);
-    if (user.getPersonalPhotos().size() > 0) {
-      model.addAttribute("pathToPersonalPhoto", user.getPersonalPhotos().get(user.getPersonalPhotos().size() - 1));
+    List<Image> images = user.getImages().stream().filter(Image::isAvatar).collect(Collectors.toList());
+    if (!images.isEmpty()) {
+      model.addAttribute("pathToPersonalPhoto", images.get(0).getPath());
     }
 
     return "userPage";
@@ -107,7 +111,8 @@ public class UserController {
   public String uploadPersonalPhoto(@PathVariable String customerLink,
                                     @RequestParam("photo") MultipartFile photo) throws IOException {
 
-    imagesService.uploadPersonalPhoto(photo, customerLink);
+    User user = userService.findOne(customerLink);
+    imagesService.uploadPersonalPhoto(photo, user);
     return "redirect:/user/" + customerLink;
   }
 }

@@ -1,8 +1,9 @@
 package home.pet.production.SleeplessLife.model;
 
-import home.pet.production.SleeplessLife.converter.StringListConverter;
 import home.pet.production.SleeplessLife.domain.Role;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,34 +24,44 @@ import java.util.UUID;
 @Table(name = "usr")
 @Getter
 @Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
 
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
   @Column(updatable = false, nullable = false)
+  @EqualsAndHashCode.Include
   private UUID id;
   private String customerLink;
   private String name;
   private String email;
   private String password;
-  @Column
-  @Convert(converter = StringListConverter.class)
-  private List<String> personalPhotos;
+
+  @ManyToMany(cascade = { CascadeType.ALL })
+  @JoinTable(
+      name = "Users_Images",
+      joinColumns = { @JoinColumn(name = "user_id") },
+      inverseJoinColumns = { @JoinColumn(name = "image_id") }
+  )
+  Set<Image> images = new HashSet<>();
 
   @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
   @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
-  public User() {
-  }
 
   public User(String customerLink, String name, String password, String email) {
     this.customerLink = customerLink;
     this.name = name;
     this.password = password;
     this.email = email;
+  }
+
+  public void setImages(Image images) {
+    this.images.add(images);
   }
 
   public boolean isAdmin() {
